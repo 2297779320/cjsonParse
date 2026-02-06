@@ -259,7 +259,7 @@ E_StateCode MediaParseListElement(INT8 *strListType, INT8 *strJson, void *pData)
 		return eCode;
 	}
 
-	return STATE_CODE_OBJECT_NOT_EXIST;
+	return STATE_CODE_NO_ERROR;
 }
 
 E_StateCode MediaMakeListElement(INT8 *strListType, void *pData, INT8 **pstrJson)
@@ -284,7 +284,7 @@ E_StateCode MediaMakeListElement(INT8 *strListType, void *pData, INT8 **pstrJson
 		syserr("JsonMakeListElement failed, strListType is %s\n", strListType);
 		return eCode;
 	}
-	return STATE_CODE_OBJECT_NOT_EXIST;
+	return STATE_CODE_NO_ERROR;
 }
 
 

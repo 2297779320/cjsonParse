@@ -36,7 +36,7 @@ extern		"C"
     {"uiBitRate", CJSON_TYPE_INT, offsetof(T_AEncInfo, uiBitRate), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX},
     {"uiDelay", CJSON_TYPE_INT, offsetof(T_AEncInfo, uiDelay), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX},
     {"strQuality", CJSON_TYPE_STRING, offsetof(T_AEncInfo, strQuality), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX},
-    {NULL, 0, 0, 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX} // 结束标记
+    {NULL, 0, sizeof(T_AEncInfo), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX} // 结束标记
 };
 
   CJsonStructFieldDef g_stVideoParamKey[] = {
@@ -51,7 +51,7 @@ extern		"C"
     {"uiQpMin", CJSON_TYPE_INT, offsetof(T_VEncInfo, uiQpMin), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX},
     {"uiQpMax", CJSON_TYPE_INT, offsetof(T_VEncInfo, uiQpMax), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX},
     {"uiRcType", CJSON_TYPE_INT, offsetof(T_VEncInfo, uiRcType), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX},
-    {NULL, 0, 0, 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX} // 结束标记
+    {NULL, 0, sizeof(T_VEncInfo), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX} // 结束标记
 };
 
   CJsonStructFieldDef g_stMuxParamKey[] = {
@@ -67,7 +67,7 @@ extern		"C"
     {"pmt_interval", CJSON_TYPE_INT, offsetof(T_TsMuxInfo, pmt_interval), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX},
     {"pcr_interval", CJSON_TYPE_INT, offsetof(T_TsMuxInfo, pcr_interval), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX},
     {"sdt_interval", CJSON_TYPE_INT, offsetof(T_TsMuxInfo, sdt_interval), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX},
-    {NULL, 0, 0, 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX} // 结束标记
+    {NULL, 0, sizeof(T_TsMuxInfo), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX} // 结束标记
 };
 
   CJsonStructFieldDef g_stMuxServiceParamKey[] = {
@@ -75,7 +75,7 @@ extern		"C"
     {"ServiceName", CJSON_TYPE_STRING, offsetof(T_TsMuxServiceInfo, ServiceName), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX},
     {"ProviderName", CJSON_TYPE_STRING, offsetof(T_TsMuxServiceInfo, ProviderName), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX},
     {"ServiceType", CJSON_TYPE_INT, offsetof(T_TsMuxServiceInfo, ServiceType), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX},
-    {NULL, 0, 0, 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX} // 结束标记
+    {NULL, 0, sizeof(T_TsMuxServiceInfo), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX} // 结束标记
 };
 
   CJsonStructFieldDef g_stEncParamKey[] = {
@@ -83,7 +83,7 @@ extern		"C"
     {"AEncInfo", CJSON_TYPE_STRUCT, offsetof(T_EncInfo, AEncInfo), sizeof(T_AEncInfo), g_stAudioParamKey, 0, 0, NULL, CJSON_TYPE_MAX},
     {"TsMuxInfo", CJSON_TYPE_STRUCT, offsetof(T_EncInfo, TsMuxInfo), sizeof(T_TsMuxInfo), g_stMuxParamKey, 0, 0, NULL, CJSON_TYPE_MAX},
     {"TsMuxServiceInfo", CJSON_TYPE_STRUCT, offsetof(T_EncInfo, TsMuxServiceInfo), sizeof(T_TsMuxServiceInfo), g_stMuxServiceParamKey, 0, 0, NULL, CJSON_TYPE_MAX},
-    {NULL, 0, 0, 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX} // 结束标记
+    {NULL, 0, sizeof(T_EncInfo), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX} // 结束标记
 };
 
   CJsonStructFieldDef g_stProgInfoKey[] = {
@@ -93,7 +93,7 @@ extern		"C"
     {"aud_type", CJSON_TYPE_INT, offsetof(T_prog_info_t, aud_type), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX},
     {"aud_pid", CJSON_TYPE_INT, offsetof(T_prog_info_t, aud_pid), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX},
     {"pcr_pid", CJSON_TYPE_INT, offsetof(T_prog_info_t, pcr_pid), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX},
-    {NULL, 0, 0, 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX} // 结束标记
+    {NULL, 0, sizeof(T_prog_info_t), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX} // 结束标记
 };
 
   CJsonStructFieldDef g_stTranscodeDecodeParamKey[] = {
@@ -114,7 +114,7 @@ extern		"C"
     {"hu", CJSON_TYPE_INT, offsetof(T_TranscodeDecodeParam, hu), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX},
     {"sa", CJSON_TYPE_INT, offsetof(T_TranscodeDecodeParam, sa), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX},
     {"errfmfiltervalue", CJSON_TYPE_INT, offsetof(T_TranscodeDecodeParam, errfmfiltervalue), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX},
-    {NULL, 0, 0, 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX} // 结束标记
+    {NULL, 0, sizeof(T_TranscodeDecodeParam), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX} // 结束标记
 };
 
   CJsonStructFieldDef g_stTranscodeDecodePidKey[] = {
@@ -125,7 +125,7 @@ extern		"C"
     {"ap2", CJSON_TYPE_INT, offsetof(T_TranscodeDecodePid, ap2), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX},
     {"at1", CJSON_TYPE_INT, offsetof(T_TranscodeDecodePid, at1), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX},
     {"at2", CJSON_TYPE_INT, offsetof(T_TranscodeDecodePid, at2), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX},
-    {NULL, 0, 0, 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX} // 结束标记
+    {NULL, 0, sizeof(T_TranscodeDecodePid), 0, NULL, 0, 0, NULL, CJSON_TYPE_MAX} // 结束标记
 };
 
 

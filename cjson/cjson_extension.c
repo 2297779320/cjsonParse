@@ -43,7 +43,7 @@ static E_StateCode parse_json_field2(cJSON *json_item, void *field_ptr,
     return eCode;
 }
 
-static E_StateCode parse_json_field(cJSON *json_item, void *field_ptr,
+static E_StateCode parse_json_field(cJSON *json_item, void *field_ptr,  
                                     const CJsonStructFieldDef *field_def)
 {
 
@@ -51,47 +51,54 @@ static E_StateCode parse_json_field(cJSON *json_item, void *field_ptr,
     if (!json_item || !field_ptr || !field_def)
         return STATE_CODE_INVALID_PARAM;
 
+    /* 调用方传入的 field_ptr 已是字段地址，不要再次加 offset */
     switch (field_def->type)
     {
     case CJSON_TYPE_INT:
-        *(int *)((char *)field_ptr + field_def->offset) = json_item->valueint;
+        *(int *)field_ptr = json_item->valueint;
         break;
     case CJSON_TYPE_UINT:
-        *(unsigned int *)((char *)field_ptr + field_def->offset) = (unsigned int)json_item->valuedouble;
+        *(unsigned int *)field_ptr = (unsigned int)json_item->valuedouble;
         break;
     case CJSON_TYPE_FLOAT:
-        *(float *)((char *)field_ptr + field_def->offset) = (float)json_item->valuedouble;
+        *(float *)field_ptr = (float)json_item->valuedouble;
         break;
     case CJSON_TYPE_DOUBLE:
-        *(double *)((char *)field_ptr + field_def->offset) = json_item->valuedouble;
+        *(double *)field_ptr = json_item->valuedouble;
         break;
     case CJSON_TYPE_STRING:
     {
-        // 自动计算字符数组大小
-        size_t array_size = field_def->struct_size;
+        size_t array_size = 0;
+        const CJsonStructFieldDef *next_field = field_def + 1;
+        if (next_field)
+        {
+            array_size = next_field->offset - field_def->offset;
+        }
+        char *dest = (char *)field_ptr;
         if (array_size == 0)
         {
-            // 如果没有指定大小，尝试通过下一个字段的偏移量计算
-            const CJsonStructFieldDef *next_field = field_def + 1;
-            if (next_field && next_field->name)
-            {
-                array_size = next_field->offset - field_def->offset;
-            }
+            dest[0] = '\0';
+            break;
         }
-        // 使用strncpy拷贝到字符数组
-        char *dest = (char *)((char *)field_ptr + field_def->offset);
-        strncpy(dest, json_item->valuestring, array_size - 1);
-        dest[array_size - 1] = '\0'; // 确保以NULL结尾
+        if (json_item->valuestring)
+        {
+            strncpy(dest, json_item->valuestring, array_size - 1);
+            dest[array_size - 1] = '\0';
+        }
+        else
+        {
+            dest[0] = '\0';
+        }
         break;
     }
     case CJSON_TYPE_BOOL:
-        *(int *)((char *)field_ptr + field_def->offset) = cJSON_IsTrue(json_item);
+        *(int *)field_ptr = cJSON_IsTrue(json_item);
         break;
     case CJSON_TYPE_STRUCT:
     {
         if (!json_item->child)
             return STATE_CODE_INVALID_PARAM;
-        void *nested_struct = (char *)field_ptr + field_def->offset;
+        void *nested_struct = (void *)field_ptr;
         eCode = cjson_parse_json_to_struct_internal(json_item,
                                                     field_def->nested_fields,
                                                     nested_struct,
@@ -106,15 +113,15 @@ static E_StateCode parse_json_field(cJSON *json_item, void *field_ptr,
         size_t count = 0;
         while (array_item && count < field_def->array_size)
         {
-            void *element_ptr = (char *)field_ptr + field_def->offset +
-                                count * field_def->element_size;
+            void *element_ptr = (char *)field_ptr + count * field_def->element_size;
             if (field_def->element_fields)
             {
                 eCode = cjson_parse_json_to_struct_internal(array_item,
                                                             field_def->element_fields,
                                                             element_ptr,
                                                             field_def->element_size);
-                return eCode;
+                if (!STATE_OK(eCode))
+                    return eCode;
             }
             else
             {
@@ -173,13 +180,14 @@ static cJSON *encode_field_to_json2(const void *struct_ptr,
     return json_item;
 }
 
+/* 注意: 调用方传入的 struct_ptr 已是字段地址 (struct_base + field->offset)，不要再次加 offset */
 static cJSON *encode_field_to_json(const void *struct_ptr,
                                    const CJsonStructFieldDef *field_def)
 {
     if (!struct_ptr || !field_def)
         return NULL;
 
-    void *field_ptr = (char *)struct_ptr + field_def->offset;
+    void *field_ptr = (void *)struct_ptr;
     cJSON *json_item = NULL;
 
     switch (field_def->type)
@@ -287,7 +295,7 @@ static cJSON *encode_struct_to_json_internal(const void *struct_ptr,
     const CJsonStructFieldDef *field = fields;
     while (field->name)
     {
-        cJSON *item = encode_field_to_json((char *)struct_ptr + field->offset, field);
+        cJSON *item = encode_field_to_json((const char *)struct_ptr + field->offset, field);
         if (item)
         {
             cJSON_AddItemToObject(root, field->name, item);
